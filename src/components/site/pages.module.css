@@ -1,0 +1,416 @@
+.stageWrap {
+  position: relative;
+}
+
+.workHead {
+  position: absolute;
+  z-index: 3;
+  top: 4.5vh;
+  right: 5vw;
+  left: 5vw;
+}
+
+.workTitle {
+  margin: 0;
+  font-size: clamp(3rem, 6vw, 4.6rem);
+  font-weight: 560;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+.stage {
+  position: relative;
+  height: 100svh;
+}
+
+.index {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  right: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform: translateY(-50%);
+}
+
+.index button {
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.index button[aria-current="true"] {
+  color: var(--text-primary);
+}
+
+.viewport {
+  position: absolute;
+  top: 12vh;
+  left: 2.4vw;
+  width: calc(100% - 8.2rem);
+  height: 78vh;
+  overflow: hidden;
+  border-radius: 28% / 43%;
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-glass);
+}
+
+.scene {
+  width: 100%;
+  height: 100%;
+  perspective: 1400px;
+}
+
+.cube {
+  --depth: 42vh;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: translateZ(calc(var(--depth) * -1));
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  background: var(--bg-primary);
+}
+
+.cubeFlat .face {
+  visibility: hidden;
+}
+
+.cubeFlat .faceOn {
+  visibility: visible;
+}
+
+.faceCover {
+  position: absolute;
+  inset: 0;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, #000 52%, transparent 76%);
+}
+
+.faceCover > div {
+  height: 100%;
+  min-height: 0;
+}
+
+.faceTitle {
+  position: absolute;
+  z-index: 2;
+  top: 8%;
+  right: 40%;
+  left: 6%;
+  margin: 0;
+  font-size: clamp(1.45rem, 2.8vw, 2.7rem);
+  font-weight: 520;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 12px 28px var(--bg-primary);
+}
+
+.faceInfo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 38%;
+  min-width: 0;
+  padding: 1.6rem 1.5rem 1.5rem 2.4rem;
+  background: linear-gradient(90deg, transparent 0%, var(--bg-primary) 34%);
+}
+
+.category {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.year {
+  margin: 0.35rem 0 0.9rem;
+  color: var(--accent);
+  font-size: 0.95rem;
+}
+
+.summary {
+  margin: 0.7rem 0 0;
+  font-size: clamp(1.05rem, 1.55vw, 1.55rem);
+  font-weight: 450;
+  letter-spacing: -0.03em;
+  line-height: 1.28;
+  color: var(--text-secondary);
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 1.3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pill {
+  padding: 0.28rem 0.7rem;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.portrait {
+  width: min(100%, 58rem);
+  aspect-ratio: 3.2 / 1;
+  margin: 2.2rem 0 0;
+  overflow: hidden;
+}
+
+.backdrop {
+  position: fixed;
+  z-index: 0;
+  top: -10vh;
+  right: -8vw;
+  width: min(62vw, 42rem);
+  height: 120vh;
+  overflow: hidden;
+  border-radius: 280px 0 0 280px;
+  pointer-events: none;
+}
+
+.backdrop > div {
+  height: 100%;
+  filter: blur(28px);
+  transform: scale(1.18);
+}
+
+.portrait > div {
+  height: 100%;
+  min-height: 0;
+}
+
+.facts {
+  width: min(100%, 58rem);
+  margin: 1.6rem 0 0;
+}
+
+.fact {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.fact span:first-child {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.aboutBlock {
+  width: min(100%, 58rem);
+  margin-top: 2.4rem;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.display {
+  margin: 0.4rem 0 0;
+  font-size: clamp(3rem, 7vw, 5.6rem);
+  font-weight: 520;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+.role {
+  margin: 0.8rem 0 0;
+  font-size: 1.05rem;
+}
+
+.mail {
+  display: inline-block;
+  margin-top: 0.8rem;
+  color: inherit;
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+
+.mail:hover {
+  color: var(--text-secondary);
+}
+
+.body {
+  margin: 1rem 0 0;
+  max-width: 46rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.versionRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem 1.5rem;
+  width: min(100%, 58rem);
+  margin-top: 3rem;
+}
+
+.columns h2 {
+  margin: 0 0 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 550;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.columns ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-secondary);
+}
+
+.columns li {
+  padding: 0.16rem 0;
+}
+
+.introCard {
+  width: min(100%, 58rem);
+  margin-top: 1.6rem;
+  padding: 1.3rem 1.3rem 1.4rem;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  box-shadow: var(--shadow-glass);
+}
+
+.introCard h2 {
+  margin: 0;
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  font-weight: 520;
+  letter-spacing: -0.03em;
+}
+
+.introCard p {
+  margin: 0.7rem 0 0;
+  max-width: 40rem;
+  color: var(--text-secondary);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.4rem;
+  margin-top: 1.6rem;
+  font-size: 1rem;
+}
+
+.prompts {
+  width: min(100%, 58rem);
+  margin: 2.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prompts li {
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--line);
+  color: var(--text-secondary);
+}
+
+.available {
+  margin: 1rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .stage {
+    height: auto;
+    min-height: 100svh;
+    padding: 5.5rem 1rem 2.5rem;
+  }
+
+  .index {
+    position: relative;
+    top: auto;
+    right: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 0.8rem;
+    transform: none;
+  }
+
+  .viewport {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: 72vh;
+    border-radius: 2.4rem;
+  }
+
+  .faceCover {
+    mask-image: linear-gradient(180deg, #000 46%, transparent 72%);
+  }
+
+  .faceInfo {
+    top: auto;
+    width: 100%;
+    height: 46%;
+    padding: 1.4rem 1rem 1rem;
+    background:
+      linear-gradient(180deg, transparent, var(--bg-primary) 28%),
+      var(--bg-primary);
+  }
+
+  .columns {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .portrait {
+    aspect-ratio: 2.15 / 1;
+  }
+
+  .backdrop {
+    width: 100vw;
+    border-radius: 0;
+    opacity: 0.55;
+  }
+}
