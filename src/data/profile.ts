@@ -71,15 +71,18 @@ export const skillsLead =
 
 export const contactBlocks: RichPart[][] = [
   [
-    { text: "Open to work", italic: true },
+    { text: "Looking for " },
+    { text: "full-time or contract work", italic: true },
     {
-      text: ". I build production web apps and the systems behind them, and I'm glad to talk about a role or a collaboration.",
+      text: ". Eager to join an innovative team and contribute to ambitious projects.",
     },
   ],
   [
-    { text: "Available for " },
-    { text: "freelance work", italic: true },
-    { text: " and product collaborations, on ambitious web apps, APIs, and AI systems." },
+    { text: "I'm available for" },
+    { text: " freelance missions worldwide", italic: true },
+    { text: ", on" },
+    { text: " your ambitious projects", italic: true },
+    { text: " and international collaborations." },
   ],
 ];
 

@@ -1,98 +1,109 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { heroProject } from "@/data/heroProject";
 import { prefersReducedMotion } from "./motion";
 
+type CoreRendererApi = {
+  init: () => Promise<unknown>;
+  destroy: () => void;
+};
+
+declare global {
+  interface Window {
+    CoreRenderer?: CoreRendererApi;
+  }
+}
+
+let scriptPromise: Promise<CoreRendererApi> | null = null;
+
+function loadCoreRenderer(): Promise<CoreRendererApi> {
+  if (typeof window === "undefined") {
+    return Promise.reject(new Error("CoreRenderer requires a browser"));
+  }
+  if (window.CoreRenderer) return Promise.resolve(window.CoreRenderer);
+  if (scriptPromise) return scriptPromise;
+
+  scriptPromise = new Promise((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>('script[data-core-renderer="1"]');
+    if (existing) {
+      existing.addEventListener("load", () => {
+        if (window.CoreRenderer) resolve(window.CoreRenderer);
+        else reject(new Error("CoreRenderer failed to load"));
+      });
+      existing.addEventListener("error", () => reject(new Error("CoreRenderer script error")));
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "/vendor/core-renderer.js";
+    script.async = true;
+    script.dataset.coreRenderer = "1";
+    script.onload = () => {
+      if (window.CoreRenderer) resolve(window.CoreRenderer);
+      else reject(new Error("CoreRenderer failed to load"));
+    };
+    script.onerror = () => reject(new Error("CoreRenderer script error"));
+    document.head.appendChild(script);
+  });
+
+  return scriptPromise;
+}
+
 export function FluidWash({ className }: { className?: string }) {
-  const ref = useRef<HTMLCanvasElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
+    const container = ref.current;
+    if (!container || prefersReducedMotion()) return;
 
-    const context = canvas.getContext("2d", { alpha: false });
-    if (!context) return;
+    let cancelled = false;
+    let blobUrl: string | null = null;
 
-    const reduced = prefersReducedMotion();
-    let frame = 0;
+    const wakeInteractivity = () => {
+      const event = new MouseEvent("mousemove", {
+        clientX: window.innerWidth * 0.55,
+        clientY: window.innerHeight * 0.35,
+        bubbles: true,
+      });
+      window.dispatchEvent(event);
+      window.dispatchEvent(new Event("scroll"));
+    };
 
-    const paint = (time: number) => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      context.fillStyle = "#0a0a0a";
-      context.fillRect(0, 0, width, height);
+    void (async () => {
+      try {
+        const CoreRenderer = await loadCoreRenderer();
+        if (cancelled || !ref.current) return;
 
-      const t = reduced ? 0 : time * 0.00008;
-      // Keep mass in the upper/mid field so the lower name band stays near-black.
-      const blobs = [
-        { x: 0.8, y: 0.28, r: 0.7, c0: [210, 28, 18], a: 0.98 },
-        { x: 0.6, y: 0.38, r: 0.55, c0: [160, 22, 14], a: 0.8 },
-        { x: 0.92, y: 0.14, r: 0.42, c0: [255, 72, 28], a: 0.6 },
-        { x: 0.48, y: 0.44, r: 0.42, c0: [110, 14, 10], a: 0.55 },
-        { x: 0.72, y: 0.16, r: 0.34, c0: [190, 42, 18], a: 0.48 },
-      ] as const;
+        blobUrl = URL.createObjectURL(
+          new Blob([JSON.stringify(heroProject)], { type: "application/json" }),
+        );
+        container.setAttribute("data-cr-project-src", blobUrl);
+        container.removeAttribute("data-cr-initialized");
+        container.removeAttribute("data-scene-id");
+        container.replaceChildren();
 
-      for (const blob of blobs) {
-        const x = (blob.x + Math.sin(t + blob.y * 7) * 0.04) * width;
-        const y = (blob.y + Math.cos(t * 0.85 + blob.x * 5) * 0.05) * height;
-        const radius = blob.r * Math.max(width, height);
-        const [r, g, b] = blob.c0;
-        const gradient = context.createRadialGradient(x, y, 0, x, y, radius);
-        gradient.addColorStop(0, `rgba(${r},${g},${b},${blob.a})`);
-        gradient.addColorStop(0.35, `rgba(${r},${g},${b},${blob.a * 0.45})`);
-        gradient.addColorStop(0.7, `rgba(${Math.max(0, r - 40)},${g},${b},${blob.a * 0.12})`);
-        gradient.addColorStop(1, "rgba(10,10,10,0)");
-        context.fillStyle = gradient;
-        context.fillRect(0, 0, width, height);
+        await CoreRenderer.init();
+        if (cancelled) return;
+
+        URL.revokeObjectURL(blobUrl);
+        blobUrl = null;
+        wakeInteractivity();
+      } catch (error) {
+        console.error("Hero CoreRenderer init failed:", error);
       }
-
-      // Soft vignette so edges fall into black like the reference canvas.
-      const vignette = context.createRadialGradient(
-        width * 0.62,
-        height * 0.32,
-        Math.min(width, height) * 0.12,
-        width * 0.55,
-        height * 0.4,
-        Math.max(width, height) * 0.72,
-      );
-      vignette.addColorStop(0, "rgba(10,10,10,0)");
-      vignette.addColorStop(1, "rgba(10,10,10,0.78)");
-      context.fillStyle = vignette;
-      context.fillRect(0, 0, width, height);
-
-      const bottomFade = context.createLinearGradient(0, height * 0.55, 0, height);
-      bottomFade.addColorStop(0, "rgba(10,10,10,0)");
-      bottomFade.addColorStop(1, "rgba(10,10,10,0.92)");
-      context.fillStyle = bottomFade;
-      context.fillRect(0, 0, width, height);
-    };
-
-    const draw = (time: number) => {
-      paint(time);
-      frame = window.requestAnimationFrame(draw);
-    };
-
-    const resize = () => {
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      canvas.width = Math.max(1, Math.floor(width * ratio));
-      canvas.height = Math.max(1, Math.floor(height * ratio));
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      // Cheap blur approximation via soft draws; CSS filter does the heavy lift.
-      if (reduced) paint(0);
-    };
-
-    resize();
-    if (!reduced) frame = window.requestAnimationFrame(draw);
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
+    })();
 
     return () => {
-      window.cancelAnimationFrame(frame);
-      observer.disconnect();
+      cancelled = true;
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+      window.CoreRenderer?.destroy();
+      container.removeAttribute("data-cr-project-src");
+      container.removeAttribute("data-cr-initialized");
+      container.removeAttribute("data-scene-id");
+      container.replaceChildren();
     };
   }, []);
 
-  return <canvas ref={ref} className={className} aria-hidden="true" />;
+  return <div ref={ref} className={className} aria-hidden="true" />;
 }

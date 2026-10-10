@@ -6,12 +6,16 @@ export function HoverLink({
   href,
   children,
   className,
+  onLight = false,
 }: {
   href: string;
   children: string;
   className?: string;
+  onLight?: boolean;
 }) {
-  const classNames = [styles.hover, className].filter(Boolean).join(" ");
+  const classNames = [styles.hover, onLight ? styles.onLight : null, className]
+    .filter(Boolean)
+    .join(" ");
   const visual = (
     <span aria-hidden="true">
       {Array.from(children).map((char, index) =>
