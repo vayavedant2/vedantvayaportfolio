@@ -10,11 +10,10 @@ import { Intro } from "./Intro";
 import { Projects } from "./Projects";
 import { Grain } from "./Rail";
 import { Skills } from "./Skills";
-import { SmoothScroll } from "./SmoothScroll";
 
 export function Home() {
   return (
-    <SmoothScroll>
+    <>
       <Grain />
       <Intro />
       <main id="content" tabIndex={-1}>
@@ -27,6 +26,6 @@ export function Home() {
         <ContactBand />
         <Footer />
       </main>
-    </SmoothScroll>
+    </>
   );
 }

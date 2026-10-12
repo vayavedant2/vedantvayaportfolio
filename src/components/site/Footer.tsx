@@ -42,9 +42,11 @@ export function Footer() {
       </div>
 
       <p className={home.footerName}>
-        <span>{profile.givenName}</span>
-        <span className={home.family}>{profile.familyName}</span>
-        <span className={home.dot} />
+        <span className={home.given}>{profile.givenName}</span>
+        <span className={home.familyWrap}>
+          <span className={home.family}>{profile.familyName}</span>
+          <span className={home.dot} aria-hidden="true" />
+        </span>
       </p>
     </footer>
   );

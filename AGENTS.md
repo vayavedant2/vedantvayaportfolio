@@ -23,10 +23,12 @@ Source of truth for Cursor agents working in this repo.
 **Motion core**
 
 - `src/components/site/motion.ts` — `gsap`, `ScrollTrigger`, `prefersReducedMotion()`, `isCompactLayout()`
-- `src/components/site/ready.ts` — intro gate: `markReady()` / `onReady()` / `isReady()`
-- `src/components/site/SmoothScroll.tsx` — Lenis via dynamic `import("lenis")`; wires Lenis → `ScrollTrigger.update`
+- `src/components/site/ready.ts` — intro gate: `markReady()` / `onReady()` / `isReady()` / `isPending()` / `onPendingChange()`
+- `src/components/site/lenis.ts` — shared Lenis instance: `getLenis()` / `scrollToTarget()` / `setLerp()`
+- `src/data/motion.ts` — `scrollFeel` (lerp / focusLerp / scrollToDuration) tuned to lukebaffait.fr
+- `src/components/site/SmoothScroll.tsx` — Lenis via dynamic `import("lenis")`; mounted once in `layout.tsx`; wires Lenis → `ScrollTrigger.update`
 
-**Home composition** (`Home.tsx`): `SmoothScroll` → `Grain` → `Intro` → `<main id="content">`: Hero → About → Projects → Gallery → Skills → Awards → ContactBand → Footer.
+**Home composition** (`Home.tsx`): `Grain` → `Intro` → `<main id="content">`: Hero → About → Projects → Gallery → Skills → Awards → ContactBand → Footer. (Lenis lives in root layout.)
 
 ## New section checklist (mandatory)
 

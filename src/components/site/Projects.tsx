@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { scrollFeel } from "@/data/motion";
 import { works } from "@/data/projects";
 import { Poster } from "./Poster";
+import { scrollToTarget, setLerp } from "./lenis";
 import { gsap, isCompactLayout, prefersReducedMotion, ScrollTrigger } from "./motion";
 import { onReady } from "./ready";
 import home from "./home.module.css";
@@ -173,6 +175,21 @@ export function Projects() {
       );
 
       if (!reduced.matches) {
+        itemRefs.current.forEach((item) => {
+          if (!item) return;
+          triggers.push(
+            ScrollTrigger.create({
+              trigger: item,
+              start: "top 52%",
+              end: "bottom 48%",
+              onEnter: () => setLerp(scrollFeel.focusLerp),
+              onLeave: () => setLerp(scrollFeel.lerp),
+              onEnterBack: () => setLerp(scrollFeel.focusLerp),
+              onLeaveBack: () => setLerp(scrollFeel.lerp),
+            }),
+          );
+        });
+
         ticker = () => {
           if (!preview.classList.contains(home.previewVisible)) return;
           tiltRY += (tiltTargetRY - tiltRY) * 0.12;
@@ -212,6 +229,7 @@ export function Projects() {
     return () => {
       stopReady();
       triggers.splice(0).forEach((t) => t.kill());
+      setLerp(scrollFeel.lerp);
       if (ticker) gsap.ticker.remove(ticker);
       window.removeEventListener("mousemove", onMove);
       reduced.removeEventListener("change", build);
@@ -226,7 +244,7 @@ export function Projects() {
     if (!item || prefersReducedMotion() || isCompactLayout()) return;
     const top = item.getBoundingClientRect().top + window.scrollY;
     const y = top - window.innerHeight / 2 + item.offsetHeight / 2;
-    window.scrollTo({ top: y, behavior: "smooth" });
+    scrollToTarget(y, { duration: scrollFeel.scrollToDuration });
   };
 
   const work = works[active] ?? works[0];

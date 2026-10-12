@@ -794,7 +794,9 @@
   display: flex;
   flex-direction: column;
   min-height: 100svh;
-  overflow: clip;
+  /* Keep name ink inside this box — html/body overflow-x:clip computes
+     overflow-y to auto and would clip glyphs that spill past the footer. */
+  overflow: hidden;
   background: var(--bg-primary);
 }
 
@@ -887,20 +889,38 @@
 
 .footerName {
   position: absolute;
-  right: 6vw;
+  right: 0;
   bottom: 0;
-  left: 6vw;
-  z-index: 2;
+  left: 0;
+  z-index: 5;
   display: flex;
-  align-items: flex-end;
-  gap: 0.06em;
+  align-items: baseline;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
   margin: 0;
-  font-size: clamp(4.4rem, 13vw, 11.2rem);
+  /* Top/bottom padding keeps tight line-height glyphs inside the footer box */
+  padding: 0.22em 1.5vw 0.4em;
+  font-size: clamp(3.8rem, 12vw, 10rem);
   font-weight: 500;
   letter-spacing: -0.055em;
   line-height: 0.8;
   white-space: nowrap;
   pointer-events: none;
+}
+
+.given {
+  font-family: var(--font-sans);
+}
+
+.familyWrap {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.06em;
+}
+
+.family {
+  font-family: var(--font-serif), var(--font-geist), Geist, ui-sans-serif, sans-serif;
 }
 
 .dot {
@@ -909,7 +929,7 @@
   align-self: flex-end;
   width: 0.13em;
   height: 0.13em;
-  margin: 0 0 0.1em 0.08em;
+  margin: 0 0 0.1em;
   border-radius: 50%;
   background: var(--accent);
 }
@@ -954,9 +974,9 @@
   }
 
   .footerName {
-    left: 1rem;
-    font-size: clamp(3.1rem, 16vw, 5rem);
-    white-space: normal;
+    padding: 0.22em 1rem 0.5em;
+    font-size: clamp(2.8rem, 11vw, 4.6rem);
+    white-space: nowrap;
   }
 
   .about,
@@ -1153,9 +1173,8 @@
   }
 
   .footerName {
-    right: 1.25rem;
-    left: 1.25rem;
-    font-size: clamp(3.2rem, 18vw, 5.5rem);
+    padding: 0.22em 1.25rem 0.5em;
+    font-size: clamp(3rem, 11vw, 5rem);
   }
 }
 

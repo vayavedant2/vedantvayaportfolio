@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { scrollFeel } from "@/data/motion";
 import { works } from "@/data/projects";
 import { Grain } from "./Rail";
 import { HoverLink } from "./HoverLink";
+import { scrollToTarget } from "./lenis";
 import { isCompactLayout, prefersReducedMotion, ScrollTrigger } from "./motion";
 import { Poster } from "./Poster";
-import { SmoothScroll } from "./SmoothScroll";
 import pages from "./pages.module.css";
 import site from "./site.module.css";
 
@@ -87,11 +88,13 @@ export function WorksView() {
     const pin = ScrollTrigger.getAll().find((item) => item.trigger === root);
     if (!pin) return;
     const progress = works.length === 1 ? 0 : next / (works.length - 1);
-    window.scrollTo({ top: pin.start + (pin.end - pin.start) * progress, behavior: "smooth" });
+    scrollToTarget(pin.start + (pin.end - pin.start) * progress, {
+      duration: scrollFeel.scrollToDuration,
+    });
   };
 
   return (
-    <SmoothScroll>
+    <>
       <Grain />
       <div className={site.wash} aria-hidden="true" />
       <main id="content" tabIndex={-1}>
@@ -157,6 +160,6 @@ export function WorksView() {
           </div>
         </div>
       </main>
-    </SmoothScroll>
+    </>
   );
 }
