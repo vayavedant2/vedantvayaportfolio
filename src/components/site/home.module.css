@@ -55,8 +55,8 @@
 }
 
 .otherAccent {
-  font-family: var(--font-serif), "Iowan Old Style", Palatino, serif;
-  font-style: italic;
+  font-family: var(--font-serif), var(--font-geist), Geist, ui-sans-serif, sans-serif;
+  font-style: normal;
   font-weight: 400;
 }
 
@@ -227,167 +227,206 @@
 
 .projects {
   position: relative;
+  padding: 20vh 0;
+  min-height: 100vh;
+  z-index: 2;
 }
 
-.projectStage {
+.projectsInner {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(14rem, 0.72fr);
-  align-items: center;
-  height: 100svh;
-  padding: 0 11vw 0 7vw;
-  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.projectsList {
+  position: relative;
+  z-index: 10;
+  width: min(52%, 40rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 30vh 0 30vh 10vw;
+}
+
+.projItem {
+  margin: 0;
+  padding: 0.55em 0;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent);
+  background: none;
+  color: color-mix(in srgb, var(--text-primary) 22%, transparent);
+  font: inherit;
+  font-size: clamp(1.7rem, 3.4vw, 3.4rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.45s ease;
+  will-change: transform;
+}
+
+.projItem:first-of-type {
+  border-top: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent);
+}
+
+.projItemActive {
+  color: var(--text-primary);
 }
 
 .arc {
   position: absolute;
   z-index: 1;
-  top: -4vh;
-  left: -2vw;
-  width: 22vw;
-  height: 108vh;
+  top: -30vh;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 100vh);
   color: var(--accent);
   pointer-events: none;
+  overflow: visible;
 }
 
 .arc path {
   fill: none;
   stroke: currentColor;
-  stroke-width: 64px;
+  stroke-width: 72px;
   stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
 }
 
-.projectCopy {
-  position: relative;
-  z-index: 2;
-  min-width: 0;
-}
-
-.list {
-  position: relative;
-  z-index: 2;
-  min-width: 0;
-  margin: 0;
-  padding: 0 0 0 5vw;
-  list-style: none;
-}
-
-.rowButton {
+.projPreview {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 40;
   display: flex;
-  align-items: baseline;
-  gap: 0.8rem;
-  width: 100%;
-  padding: 0.42rem 0;
-  border: 0;
-  border-top: 1px solid var(--line);
-  background: none;
-  color: var(--text-muted);
-  font: inherit;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  text-align: left;
-  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100vh;
+  perspective: 800px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
-.rowButton strong {
-  min-width: 0;
-  font-size: clamp(1.15rem, 2vw, 1.9rem);
-  font-weight: 500;
-  overflow-wrap: anywhere;
+.previewVisible {
+  pointer-events: auto;
+  opacity: 1;
 }
 
-.rowButton[aria-current="true"] {
-  color: var(--text-primary);
-}
-
-.rowButton[aria-current="true"] strong {
-  font-size: clamp(1.35rem, 2.5vw, 2.35rem);
-}
-
-.count {
-  color: var(--text-muted);
-  font-size: 0.75rem;
-  letter-spacing: 0;
-}
-
-.preview {
+.projCard {
   position: relative;
-  z-index: 2;
-  justify-self: end;
-  width: min(30rem, 34vw);
+  width: min(30vw, 440px);
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: opacity 0.35s ease;
 }
 
 .previewMeta {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.55rem;
-  color: var(--text-secondary);
-  font-size: 0.68rem;
-  letter-spacing: 0.16em;
+  margin-bottom: 0.6rem;
+  color: color-mix(in srgb, var(--text-primary) 45%, transparent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-.previewCard {
-  height: min(22rem, 40vh);
+.previewMedia {
+  position: relative;
+  width: 100%;
   overflow: hidden;
-  border-radius: 0.35rem;
+  background: color-mix(in srgb, var(--text-primary) 6%, transparent);
 }
 
-.previewCard > div {
+.previewFallback {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+}
+
+.previewFallback > div {
   height: 100%;
-  min-height: 0;
+}
+
+.previewVisit {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  cursor: pointer;
 }
 
 .gallery {
   position: relative;
-  height: 100svh;
+  height: 600vh;
   overflow: hidden;
-  perspective: 1200px;
-  perspective-origin: 50% 46%;
+  z-index: 2;
 }
 
-.phrase {
-  position: absolute;
-  z-index: 2;
-  inset: 0;
+.galleryPin {
+  position: relative;
+  width: 100%;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  perspective: 1200px;
+}
+
+.phrase {
+  --name-glow: 0 0 14px rgba(255, 255, 255, 0.28);
+
+  position: absolute;
+  z-index: 900;
   margin: 0;
-  padding: 0 18vw;
-  font-size: clamp(1.7rem, 3.2vw, 3.15rem);
+  max-width: 600px;
+  padding: 0 1.5rem;
+  font-size: clamp(1.6rem, 3.5vw, 3.2rem);
   font-weight: 450;
   letter-spacing: -0.04em;
-  line-height: 1.12;
+  line-height: 1.3;
   text-align: center;
   pointer-events: none;
+  will-change: opacity, transform;
+  opacity: 0;
 }
 
-.phrase > span {
-  max-width: 12em;
+.phraseWord {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(8px);
+  text-shadow: var(--name-glow);
 }
 
-.phrase::before {
-  content: "";
+.cgCard {
+  --cg-w: clamp(120px, 14vw, 210px);
   position: absolute;
-  z-index: -1;
-  inset: 18% 8%;
-  background: radial-gradient(circle, var(--bg-primary) 0%, transparent 72%);
-}
-
-.orbit {
-  position: absolute;
-  z-index: 1;
-  width: clamp(8.5rem, 16vw, 14rem);
-  aspect-ratio: 4 / 3;
-  left: 50%;
-  top: 50%;
+  width: var(--cg-w);
+  aspect-ratio: 3 / 2;
   transform-style: preserve-3d;
+  will-change: transform, opacity;
 }
 
-.orbit > div {
+.cgSlice {
+  position: absolute;
+  top: 0;
   height: 100%;
+  background-repeat: no-repeat;
+  will-change: transform;
+}
+
+.previewCover {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  pointer-events: none;
 }
 
 .skills {
@@ -441,7 +480,6 @@
   align-items: center;
   gap: 0.45rem;
   margin-bottom: 2.5rem;
-  font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -635,7 +673,7 @@
 .contact {
   position: relative;
   z-index: 20;
-  min-height: 180vh;
+  min-height: 125vh;
   overflow: hidden;
 }
 
@@ -752,20 +790,32 @@
 }
 
 .footer {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100svh;
-  padding: 7vh 6vw 0;
+  overflow: clip;
   background: var(--bg-primary);
 }
 
 .footerTop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
   display: grid;
   grid-template-columns: 1.2fr 1fr 1fr;
   gap: 2rem;
-  font-size: 0.78rem;
+  padding: 7vh 6vw 0.5vh;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  pointer-events: none;
+}
+
+.footerTop a,
+.footerTop nav {
+  pointer-events: auto;
 }
 
 .footerMail {
@@ -787,29 +837,70 @@
   gap: 0.45rem;
 }
 
-.ascii {
-  width: min(28rem, 78%);
-  margin: 5vh 0 1vh;
-  color: var(--accent);
-  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
-  font-size: clamp(0.48rem, 0.72vw, 0.68rem);
-  line-height: 0.78;
-  letter-spacing: 0.14em;
-  white-space: pre;
-  opacity: 0.8;
+.globeWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: clamp(6.5rem, 14vh, 9.5rem) 4vw clamp(5rem, 12vh, 8rem);
+  container-type: size;
+  pointer-events: none;
+}
+
+.globeStage {
+  position: relative;
+  width: min(100cqw, 100cqh);
+  max-width: 56rem;
+  aspect-ratio: 1 / 1;
+  pointer-events: auto;
+}
+
+.globeMask {
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 58%,
+    rgba(0, 0, 0, 0.55) 68%,
+    transparent 76%
+  );
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 58%,
+    rgba(0, 0, 0, 0.55) 68%,
+    transparent 76%
+  );
+}
+
+.globeCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  contain: layout paint size;
+  cursor: default;
   user-select: none;
 }
 
 .footerName {
+  position: absolute;
+  right: 6vw;
+  bottom: 0;
+  left: 6vw;
+  z-index: 2;
   display: flex;
   align-items: flex-end;
   gap: 0.06em;
-  margin-top: auto;
+  margin: 0;
   font-size: clamp(4.4rem, 13vw, 11.2rem);
   font-weight: 500;
   letter-spacing: -0.055em;
   line-height: 0.8;
   white-space: nowrap;
+  pointer-events: none;
 }
 
 .dot {
@@ -870,7 +961,6 @@
 
   .about,
   .sheetGrid,
-  .projectStage,
   .footerTop {
     grid-template-columns: 1fr;
   }
@@ -922,41 +1012,66 @@
     border-radius: 150px 0 0 150px;
   }
 
-  .projectStage {
-    height: auto;
-    min-height: 100svh;
-    padding: 3.575rem 1.25rem;
+  .projects {
+    padding: 3.575rem 0;
+  }
+
+  .projectsList {
+    width: 100%;
+    padding: 0 1.25rem 2rem;
+  }
+
+  .projItem {
+    white-space: normal;
+    font-size: clamp(1.45rem, 7vw, 2.2rem);
   }
 
   .arc {
     display: none;
   }
 
-  .list {
-    padding-left: 0;
-  }
-
-  .preview {
+  .projPreview {
+    position: relative;
+    top: auto;
+    right: auto;
     width: 100%;
-    margin-top: 1.5rem;
+    height: auto;
+    padding: 0 1.25rem 1rem;
+    opacity: 1;
+    pointer-events: auto;
+    perspective: none;
   }
 
-  .previewCard,
-  .previewCard > div {
-    height: 16rem;
+  .projCard {
+    width: 100%;
   }
 
   .gallery {
-    height: 100svh;
+    height: auto;
+  }
+
+  .galleryPin {
+    height: auto;
+    min-height: 60svh;
+    padding: 8vh 0;
+    perspective: none;
   }
 
   .phrase {
+    position: relative;
+    inset: auto;
     font-size: 1.45rem;
     padding: 0 1.5rem;
+    opacity: 1;
   }
 
-  .orbit {
-    width: 5.4rem;
+  .phraseWord {
+    opacity: 1;
+    filter: none;
+  }
+
+  .cgCard {
+    display: none;
   }
 
   .awardRow {
@@ -965,6 +1080,10 @@
 
   .awardLabel {
     text-align: left;
+  }
+
+  .contact {
+    min-height: 110vh;
   }
 
   .contactTitle {
@@ -1013,13 +1132,30 @@
     align-items: center;
   }
 
-  .footer {
-    padding: 3rem 1.25rem 0;
+  .footerTop {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+    padding: 2.25rem 1.25rem 0;
   }
 
-  .ascii {
-    width: 100%;
-    font-size: 0.42rem;
+  .footerCol {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.1rem;
+  }
+
+  .globeWrap {
+    padding: 8.75rem 0.75rem 4.75rem;
+  }
+
+  .globeStage {
+    max-width: none;
+  }
+
+  .footerName {
+    right: 1.25rem;
+    left: 1.25rem;
+    font-size: clamp(3.2rem, 18vw, 5.5rem);
   }
 }
 

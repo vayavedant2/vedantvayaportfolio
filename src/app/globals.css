@@ -7,11 +7,11 @@
   --text-primary: #f0f0f0;
   --text-secondary: #b8b8b8;
   --text-muted: #9a9a9a;
-  --accent: #ff1e00;
-  --accent-button: #ff1e00;
+  --accent: #1c3d72;
+  --accent-button: #1c3d72;
   --on-accent: #ffffff;
-  --accent-soft: rgba(255, 30, 0, 0.16);
-  --accent-glow: rgba(255, 30, 0, 0.42);
+  --accent-soft: rgba(70, 120, 190, 0.18);
+  --accent-glow: rgba(120, 165, 230, 0.38);
   --glass-bg: rgba(14, 14, 18, 0.46);
   --glass-bg-solid: rgba(22, 22, 28, 0.94);
   --glass-border: rgba(255, 255, 255, 0.14);

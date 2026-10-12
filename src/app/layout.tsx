@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Instrument_Serif } from "next/font/google";
+import { Geist } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { site } from "@/data/site";
 
@@ -9,10 +10,9 @@ const geist = Geist({
   variable: "--font-geist",
 });
 
-const serif = Instrument_Serif({
-  subsets: ["latin"],
+const cavilenny = localFont({
+  src: "../fonts/Cavilenny-Regular.otf",
   weight: "400",
-  style: "italic",
   display: "swap",
   variable: "--font-serif",
 });
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geist.variable} ${serif.variable}`}>
+    <html lang="en" className={`${geist.variable} ${cavilenny.variable}`}>
       <body className={geist.className}>
         <a className="skip-link" href="#content">
           Skip to content

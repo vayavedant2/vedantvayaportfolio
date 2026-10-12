@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { profile } from "@/data/profile";
+import { useMouseTextGlow } from "./MouseTextGlow";
 import { gsap, prefersReducedMotion } from "./motion";
 import { isReady, markReady, resetReady } from "./ready";
 import styles from "./site.module.css";
@@ -30,6 +31,14 @@ export function Intro() {
   const givenRest = profile.givenName.slice(1);
   const firstLetter = profile.givenName.slice(0, 1);
 
+  useMouseTextGlow(layerRef, contentRef, {
+    animateGlow: true,
+    glowStartColor: "#FFFFFF",
+    glowBlur: 26,
+    glowOpacity: 0.55,
+    enabled: true,
+  });
+
   useEffect(() => {
     const layer = layerRef.current;
     const content = contentRef.current;
@@ -46,12 +55,12 @@ export function Intro() {
 
     // Fresh mount should replay the intro (Fast Refresh / remount).
     resetReady();
-    const reduced = prefersReducedMotion();
+    const motionReduced = prefersReducedMotion();
     const nameParts = [logo, given, family, dot];
     const revealEls = content.querySelectorAll<HTMLElement>("[data-reveal]");
 
     const layoutNames = () => {
-      const fs = Number.parseFloat(getComputedStyle(logo).fontSize) || 1;
+      const fs = Number.parseFloat(getComputedStyle(content).fontSize) || 1;
       const gapPx = fs * 0.55;
       const givenLeft = logo.offsetWidth;
       given.style.left = "100%";
@@ -82,9 +91,7 @@ export function Intro() {
     const placeAtBottom = (fontVw?: number) => {
       if (fontVw) {
         const capped = Math.min(fontVw, 16.8);
-        nameParts.forEach((el) => {
-          el.style.fontSize = `${capped}vw`;
-        });
+        content.style.fontSize = `${capped}vw`;
       }
       gsap.set(content, { x: 0, y: 0, scale: 1 });
       layoutNames();
@@ -99,14 +106,21 @@ export function Intro() {
       gsap.set(content, { x: `${offsetXVw}vw`, y: offsetY, transformOrigin: "50% 50%" });
     };
 
-    if (reduced) {
+    const enableDifferenceBlend = () => {
+      gsap.set(layer, { mixBlendMode: "difference" });
+      // Soften text-shadow once difference blend is on so it doesn't streak.
+      layer.dataset.glowSoft = "true";
+    };
+
+    if (motionReduced) {
       gsap.set(nameParts, { opacity: 1 });
       gsap.set(revealEls, { yPercent: 0 });
       gsap.set(dot, { opacity: 1 });
+      layer.dataset.glowOpen = "true";
       gsap.set(introBg, { display: "none" });
       gsap.set([panelDark, panelRed], { y: "-100%" });
       placeAtBottom(16.7);
-      gsap.set(layer, { mixBlendMode: "difference" });
+      enableDifferenceBlend();
       markReady();
       return;
     }
@@ -128,7 +142,10 @@ export function Intro() {
         ease: "power3.out",
         stagger: { each: 0.025, from: "center" },
       })
-      .add(() => layoutNames())
+      .add(() => {
+        layoutNames();
+        layer.dataset.glowOpen = "true";
+      })
       .to(dot, { opacity: 1, duration: 0.25, ease: "power2.out" })
       .to({}, { duration: 0.3 })
       .add(() => {
@@ -148,7 +165,7 @@ export function Intro() {
         const curVisualCenterY = contentRect.top + visualCenterY;
         const targetVisualCenterY = targetBottom - (content.offsetHeight * scale) / 2;
         const deltaY = targetVisualCenterY - curVisualCenterY;
-        const baseFontSize = Number.parseFloat(getComputedStyle(logo).fontSize);
+        const baseFontSize = Number.parseFloat(getComputedStyle(content).fontSize);
         const newFontSize = baseFontSize * scale;
         const fontVw = (newFontSize / window.innerWidth) * 100;
 
@@ -160,7 +177,7 @@ export function Intro() {
           onComplete: () => {
             content.style.visibility = "hidden";
             gsap.set(content, { scale: 1, x: 0, y: 0 });
-            gsap.set(layer, { mixBlendMode: "difference" });
+            enableDifferenceBlend();
             placeAtBottom(fontVw);
             content.style.visibility = "visible";
           },
@@ -175,7 +192,7 @@ export function Intro() {
 
     const onResize = () => {
       if (!isReady()) return;
-      const fs = Number.parseFloat(getComputedStyle(logo).fontSize);
+      const fs = Number.parseFloat(getComputedStyle(content).fontSize);
       const fontVw = (fs / window.innerWidth) * 100;
       placeAtBottom(fontVw);
     };

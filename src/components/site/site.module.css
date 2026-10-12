@@ -9,9 +9,9 @@
 }
 
 .italic {
-  font-family: var(--font-serif), "Iowan Old Style", Palatino, serif;
-  font-style: italic;
-  font-weight: 400;
+  font-family: var(--font-serif), var(--font-geist), Geist, ui-sans-serif, sans-serif;
+  font-style: normal;
+  font-weight: 500;
 }
 
 .hover {
@@ -141,8 +141,8 @@
 }
 
 .posterMono .posterTitle {
-  font-family: var(--font-serif), "Iowan Old Style", Palatino, serif;
-  font-style: italic;
+  font-family: var(--font-serif), var(--font-geist), Geist, ui-sans-serif, sans-serif;
+  font-style: normal;
   font-weight: 400;
   font-size: clamp(3.4rem, 6vw, 5.8rem);
   letter-spacing: -0.04em;
@@ -198,6 +198,10 @@
 }
 
 .nameLayer {
+  --horizontal: 1;
+  --vertical: 1;
+  --name-glow: 0 0 26px rgba(255, 255, 255, 0.55);
+
   position: fixed;
   top: 0;
   right: 0;
@@ -216,6 +220,7 @@
   position: relative;
   display: flex;
   align-items: baseline;
+  font-size: clamp(2.2rem, 9vw, 9rem);
   transform-origin: center center;
 }
 
@@ -223,19 +228,21 @@
 .preloaderGiven,
 .preloaderFamily,
 .preloaderDot {
+  position: relative;
+  z-index: 1;
   color: #f0f0f0;
-  font-size: clamp(2.2rem, 9vw, 9rem);
-  font-weight: 300;
+  font-size: 1em;
+  font-family: var(--font-serif), var(--font-geist), Geist, ui-sans-serif, sans-serif;
+  font-style: normal;
+  font-weight: 400;
   letter-spacing: -0.08em;
   line-height: 1.2;
   white-space: nowrap;
+  text-shadow: var(--name-glow);
 }
 
 .preloaderLogo {
-  position: relative;
-  z-index: 2;
   flex-shrink: 0;
-  font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;
   letter-spacing: -0.02em;
   opacity: 0;
 }
@@ -244,7 +251,6 @@
   position: absolute;
   top: 0;
   left: 100%;
-  font-family: var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;
   opacity: 0;
 }
 
@@ -252,9 +258,6 @@
 .preloaderDot {
   position: absolute;
   top: 0;
-  font-family: var(--font-serif), "Iowan Old Style", Palatino, serif;
-  font-style: italic;
-  font-weight: 400;
   opacity: 0;
 }
 
@@ -264,6 +267,10 @@
   padding: 0.15em 0.05em;
   margin: -0.15em -0.05em;
   vertical-align: top;
+}
+
+.nameLayer[data-glow-open="true"] .nameClip {
+  overflow: visible;
 }
 
 .preloaderFamily .nameClip {
@@ -301,7 +308,7 @@
 }
 
 .panelRed {
-  background: #ff1e00;
+  background: var(--accent);
 }
 
 .srOnly {
