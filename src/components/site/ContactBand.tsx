@@ -133,10 +133,16 @@ export function ContactBand() {
 
       timeline.fromTo(blob, { scale: 0 }, { scale: 1, duration: 0.6, ease: "none" }, 0);
 
-      gsap.set(title, {
-        x: () => window.innerWidth * 1.1,
-      });
-      timeline.to(title, { x: 0, duration: 0.3, ease: "power3.out" }, 0.18);
+      if (compact.matches) {
+        // Mobile CSS centers the title with translateX(-50%) !important —
+        // skip the desktop x-slide so GSAP doesn't fight that.
+        gsap.set(title, { clearProps: "transform,x" });
+      } else {
+        gsap.set(title, {
+          x: () => window.innerWidth * 1.1,
+        });
+        timeline.to(title, { x: 0, duration: 0.3, ease: "power3.out" }, 0.18);
+      }
 
       timeline.fromTo(
         socialsEl,

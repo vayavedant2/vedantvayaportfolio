@@ -1033,30 +1033,46 @@
   }
 
   .projects {
-    padding: 3.575rem 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 3.575rem 0 0;
+  }
+
+  .projectsInner {
+    min-height: 0;
   }
 
   .projectsList {
     width: 100%;
-    padding: 0 1.25rem 2rem;
+    padding: 12vh 1.25rem 22vh;
   }
 
   .projItem {
-    white-space: normal;
-    font-size: clamp(1.45rem, 7vw, 2.2rem);
+    white-space: nowrap;
+    font-size: clamp(1.35rem, 6.4vw, 1.85rem);
   }
 
   .arc {
-    display: none;
+    top: -8vh;
+    left: -18%;
+    width: 145%;
+    height: calc(100% + 40vh);
+  }
+
+  .arc path {
+    stroke-width: 88px;
   }
 
   .projPreview {
     position: relative;
     top: auto;
     right: auto;
+    order: -1;
+    z-index: 5;
     width: 100%;
     height: auto;
-    padding: 0 1.25rem 1rem;
+    padding: 0 1.25rem 1.5rem;
     opacity: 1;
     pointer-events: auto;
     perspective: none;
@@ -1080,8 +1096,9 @@
   .phrase {
     position: relative;
     inset: auto;
-    font-size: 1.45rem;
-    padding: 0 1.5rem;
+    max-width: 100%;
+    font-size: 1.32rem;
+    padding: 0 1.75rem;
     opacity: 1;
   }
 
@@ -1106,13 +1123,24 @@
     min-height: 110vh;
   }
 
+  /* Light fill as soon as contact is active — title is dark and must stay readable
+     before the blob finishes covering the viewport on narrow screens. */
+  .contactBg {
+    background: #f0f0f0;
+  }
+
   .contactTitle {
     top: 15%;
-    left: 50%;
-    width: 100%;
-    font-size: clamp(3.5rem, 15vw, 6rem);
+    right: 0;
+    left: 0;
+    width: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0 0.15em;
+    font-size: clamp(3.2rem, 14vw, 5.5rem);
     text-align: center;
-    transform: translateX(-50%);
+    /* No translateX centering — GSAP x would overwrite it and clip the title */
+    transform: none !important;
   }
 
   .contactFrame {
@@ -1123,7 +1151,7 @@
     left: 50%;
     width: 85%;
     text-align: center;
-    transform: translateX(-50%);
+    transform: translateX(-50%) !important;
   }
 
   .contactDispoOne {
@@ -1145,7 +1173,7 @@
     left: 50%;
     align-items: center;
     width: 100%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) !important;
   }
 
   .contactSocials {

@@ -83,15 +83,9 @@ export function Projects() {
     };
 
     const syncFromScroll = () => {
-      if (compact.matches) {
-        itemRefs.current.forEach((item) => {
-          if (item) item.style.transform = "";
-        });
-        return;
-      }
-
       const cy = window.innerHeight / 2;
       const halfH = window.innerHeight / 2;
+      const spread = compact.matches ? Math.min(window.innerWidth * 0.2, 72) : 80;
       let closestIdx = -1;
       let closestDist = Infinity;
 
@@ -100,7 +94,7 @@ export function Projects() {
         const rect = item.getBoundingClientRect();
         const itemCy = rect.top + rect.height / 2;
         const dist = Math.abs(itemCy - cy);
-        const x = reduced.matches ? 0 : Math.min(dist / halfH, 1) * 80;
+        const x = reduced.matches ? 0 : Math.min(dist / halfH, 1) * spread;
         const qx = quickX[i];
         if (qx) qx(x);
         else item.style.transform = `translateX(${x}px)`;
@@ -124,15 +118,9 @@ export function Projects() {
       }
       card.style.transform = "";
       tiltRY = tiltRX = tiltTargetRY = tiltTargetRX = 0;
-
-      if (compact.matches) {
-        setPreviewVisible(true);
-        paintLine(1);
-        itemRefs.current.forEach((item) => {
-          if (item) item.style.transform = "";
-        });
-        return;
-      }
+      itemRefs.current.forEach((item) => {
+        if (item) gsap.set(item, { x: 0 });
+      });
 
       itemRefs.current.forEach((item) => {
         if (!item || reduced.matches) {
@@ -142,17 +130,21 @@ export function Projects() {
         quickX.push(gsap.quickTo(item, "x", { duration: 0.6, ease: "power2.out" }));
       });
 
-      triggers.push(
-        ScrollTrigger.create({
-          trigger: root,
-          start: "top 80%",
-          end: "bottom 20%",
-          onEnter: () => setPreviewVisible(true),
-          onLeave: () => setPreviewVisible(false),
-          onEnterBack: () => setPreviewVisible(true),
-          onLeaveBack: () => setPreviewVisible(false),
-        }),
-      );
+      if (compact.matches) {
+        setPreviewVisible(true);
+      } else {
+        triggers.push(
+          ScrollTrigger.create({
+            trigger: root,
+            start: "top 80%",
+            end: "bottom 20%",
+            onEnter: () => setPreviewVisible(true),
+            onLeave: () => setPreviewVisible(false),
+            onEnterBack: () => setPreviewVisible(true),
+            onLeaveBack: () => setPreviewVisible(false),
+          }),
+        );
+      }
 
       triggers.push(
         ScrollTrigger.create({
@@ -174,7 +166,7 @@ export function Projects() {
         }),
       );
 
-      if (!reduced.matches) {
+      if (!reduced.matches && !compact.matches) {
         itemRefs.current.forEach((item) => {
           if (!item) return;
           triggers.push(
@@ -200,7 +192,7 @@ export function Projects() {
         gsap.ticker.add(ticker);
       }
 
-      paintLine(0);
+      paintLine(compact.matches && reduced.matches ? 1 : 0);
       syncFromScroll();
       ScrollTrigger.refresh();
     };
